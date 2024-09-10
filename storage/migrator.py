@@ -47,4 +47,5 @@ class Migrator:
         self.storage.connection.execute(query5)
         self.storage.connection.commit()
 
-
+        migrator = Migrator(SqliteStorage("data.db"))
+        migrator.migrate()
