@@ -1,11 +1,13 @@
 class Question:
-    id: int|None = None
-    text: str
+    def __init__(self, text: str, id: int | None = None):
+        self.id = id
+        self.text = text
 
 
 class Answer:
-    id: int|None = None
-    value: str
+    def __init__(self, value: str, id: int | None = None):
+        self.id = id
+        self.value = value
 
 
 class Test:
