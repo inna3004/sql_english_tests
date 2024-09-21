@@ -17,4 +17,23 @@ def get_answers(self,question_id):
     rows = cursor.fetchall()
     return rows
 
-  
+def get_tests(self,tests_id):
+    cursor = self.storage.connection.cursor()
+    query = f"SELECT * FROM tests WHERE id = {tests_id};"
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    return rows
+
+def get_users(self,users_id):
+    cursor = self.storage.connection.cursor()
+    query = f"SELECT * FROM users WHERE id = {users_id};"
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    return rows
+
+def get_results(self,results_id):
+    cursor = self.storage.connection.cursor()
+    query = f"SELECT * FROM results WHERE id = {results_id};"
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    return rows
