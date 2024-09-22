@@ -1,13 +1,22 @@
-class Question:
-    def __init__(self, text: str, id: int | None = None):
-        self.id = id
-        self.text = text
-
-
 class Answer:
     def __init__(self, value: str, id: int | None = None):
         self.id = id
         self.value = value
+
+    def __str__(self):
+        return self.value
+
+
+class Question:
+    answers: list[Answer]
+    correct_answer: Answer
+
+    def __str__(self):
+        return self.text
+
+    def __init__(self, text: str, id: int | None = None):
+        self.id = id
+        self.text = text
 
 
 class Test:
@@ -15,11 +24,16 @@ class Test:
     title: str
     difficult: int
     category: str
+    questions: list[Question]
 
-    def __init__(self, title: str, difficult: int, category: str):
+    def __str__(self):
+        return self.title
+
+    def __init__(self,title: str, difficult: int, category: str, test_id: int = None):
         self.title = title
         self.difficult = difficult
         self.category = category
+        self.id = test_id
 
 
 
