@@ -36,4 +36,10 @@ class Test:
         self.id = test_id
 
 
+class User:
+    id: int|None = None
+    username: str
+    password: str
+    is_admin: bool
+
 
