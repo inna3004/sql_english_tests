@@ -1,17 +1,29 @@
-from service.repository import Repository
+from service.repository import UsersRepository, TestsRepository
 from storage.sqlite_storage import SqliteStorage
+from service.auth_service import AuthService
+from service.tests_service import TestsService
+from interface.auth import Login
+from interface.tests import Tests
+
 
 def main():
     storage = SqliteStorage('./storage/data.db')
-    repo = Repository(storage)
-    test = repo.get_full_test(1)
-    for question in test.questions:
-        print(question)
-        print('Варианты ответа:')
-        for i in range(0, len(question.answer)):
-            print(i + 1, question.answer[i])
-        print('введите номер выбранного ответа:')
-        choise = input()
+    userRepository = UsersRepository(storage)
+    testsRepository = TestsRepository(storage)
+
+    auth = AuthService(userRepository)
+    testsService = TestsService(testsRepository)
+
+    authInterface = Login(auth)
+    testsInterface = Tests(testsService)
+
+    while True:
+        user = authInterface.login_form()
+        if user is None:
+            continue
+        test = testsInterface.choose_test()
+        choises = testsInterface.run_test(test)
+
 
 if __name__ == '__main__':
     main()

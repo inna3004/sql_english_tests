@@ -1,52 +1,36 @@
 from storage.sqlite_storage import SqliteStorage
-from service.models import Test, Question, Answer
+from service.models import Test, Question, Answer, User
 
 
-class Repository:
+class BaseRepository:
     def __init__(self, storage: SqliteStorage):
         self.storage = storage
 
-    def get_questions(self):
-        cursor = self.storage.connection.cursor()
-        query = "SELECT * FROM questions;"
-        cursor.execute(query)
-        rows = cursor.fetchall()
-        return rows
 
-    def get_answers(self, question_id):
-        cursor = self.storage.connection.cursor()
-        query = f"SELECT * FROM answers WHERE id = {question_id};"
-        cursor.execute(query)
-        rows = cursor.fetchall()
-        return rows
-
+class TestsRepository(BaseRepository):
     def get_tests(self):
         cursor = self.storage.connection.cursor()
         query = f"SELECT * FROM tests;"
         cursor.execute(query)
         rows = cursor.fetchall()
-        return rows
+        tests = []
+        for row in rows:
+            test = Test(row[1], row[2], row[3], row[0])
+            tests.append(test)
+        return tests
 
-    def get_users(self, users_id):
-        cursor = self.storage.connection.cursor()
-        query = f"SELECT * FROM users WHERE id = {users_id};"
-        cursor.execute(query)
-        rows = cursor.fetchall()
-        return rows
-
-    def get_results(self, results_id):
-        cursor = self.storage.connection.cursor()
-        query = f"SELECT * FROM results WHERE id = {results_id};"
-        cursor.execute(query)
-        rows = cursor.fetchall()
-        return rows
+    def find_question(self, question_id):
+        pass
+        # cursor = self.storage.connection.cursor()
+        # query = f"SELECT * FROM questions;"
+        # cursor.execute(query)
+        # rows = cursor.fetchone()
+        # question = Question(rows[1])
+        # question.id = rows[0]
+        # question.question_id = rows[1]
 
 
-#question_id = 4
-#correct_answer_id = 6
-# answer_id = 8
-#answer_text = 9
-# answer.question_id = 10
+
     def find_all_answer(self, data: list|tuple, question_id: int):
         answers = []
         for row in data:
@@ -79,10 +63,33 @@ class Repository:
             question_id = row[4]
             if len(test.questions) == 0 or question_id != test.questions[-1].id:
                 question = Question(id=row[4], text=row[5])
-                question.answer = self.find_all_answer(raw_data, question.id)
+                question.answers = self.find_all_answer(raw_data, question.id)
                 question.correct_answer = self.get_correct_answer(raw_data, row[6])
                 test.questions.append(question)
 
         return test
+
+
+class UsersRepository(BaseRepository):
+    def get_user(self, users_id):
+        cursor = self.storage.connection.cursor()
+        query = f"SELECT * FROM users WHERE id = {users_id};"
+        cursor.execute(query)
+        rows = cursor.fetchone()
+        return rows
+
+    def get_by_username(self, username: str):
+        cursor = self.storage.connection.cursor()
+        query = f"SELECT * FROM users WHERE username = '{username}';"
+        cursor.execute(query)
+        rows = cursor.fetchone()
+        if rows is None:
+            return None
+        user = User()
+        user.id = rows[0]
+        user.username = rows[1]
+        user.password = rows[2]
+        user.is_admin = rows[3]
+        return user
 
 
