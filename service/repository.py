@@ -20,14 +20,13 @@ class TestsRepository(BaseRepository):
         return tests
 
     def find_question(self, question_id):
-        pass
-        # cursor = self.storage.connection.cursor()
-        # query = f"SELECT * FROM questions;"
-        # cursor.execute(query)
-        # rows = cursor.fetchone()
-        # question = Question(rows[1])
-        # question.id = rows[0]
-        # question.question_id = rows[1]
+        cursor = self.storage.connection.cursor()
+        query = f"SELECT * FROM questions;"
+        cursor.execute(query)
+        rows = cursor.fetchone()
+        question = Question(rows[1])
+        question.id = rows[0]
+        question.question_id = rows[1]
 
 
 
@@ -91,5 +90,3 @@ class UsersRepository(BaseRepository):
         user.password = rows[2]
         user.is_admin = rows[3]
         return user
-
-
