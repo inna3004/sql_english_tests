@@ -19,6 +19,9 @@ class TestsRepository(BaseRepository):
             tests.append(test)
         return tests
 
+
+
+
     def find_question(self, question_id):
         cursor = self.storage.connection.cursor()
         query = f"SELECT * FROM questions;"
@@ -76,6 +79,14 @@ class UsersRepository(BaseRepository):
         cursor.execute(query)
         rows = cursor.fetchone()
         return rows
+
+    def title_tests(self, tests_id):
+        cursor = self.storage.connection.cursor()
+        query = f"SELECT title FROM tests where id = {tests_id};"
+        cursor.execute(query)
+        rows = cursor.fetchone()
+        return rows
+
 
     def get_by_username(self, username: str):
         cursor = self.storage.connection.cursor()
