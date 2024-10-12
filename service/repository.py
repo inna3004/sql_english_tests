@@ -101,3 +101,11 @@ class UsersRepository(BaseRepository):
         user.password = rows[2]
         user.is_admin = rows[3]
         return user
+
+    def save_result(self, user: User, test: Test, result: int):
+        pass
+
+    def get_users_results(self, user: User):
+        pass
+
+
