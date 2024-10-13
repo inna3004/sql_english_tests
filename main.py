@@ -14,7 +14,7 @@ def main():
 
     auth = AuthService(userRepository)
     testsService = TestsService(testsRepository)
-    score = ScoreSerive()
+    score = ScoreSerive(testsRepository)
 
     authInterface = Login(auth)
     testsInterface = Tests(testsService)
@@ -26,6 +26,8 @@ def main():
         test = testsInterface.choose_test()
         choises = testsInterface.run_test(test)
         sum = score.score(answers=choises, test=test)
+
+        print(f"Вы набрали {sum} баллов")
 
 
 if __name__ == '__main__':
