@@ -102,10 +102,26 @@ class UsersRepository(BaseRepository):
         user.is_admin = rows[3]
         return user
 
-    def save_result(self, user: User, test: Test, result: int):
-        pass
+    def save_result(self, user: User, test: Test, score: int):
+        cursor = self.storage.connection.cursor()
+        query = f"INSERT INTO results (user_id, test_id, score) VALUES (%s, %s, %s)"
+        args = (user.id, test.id, score)
+        cursor.execute(query, args)
+        self.storage.connection.commit()
+        self.storage.connection.close()
 
-    def get_users_results(self, user: User):
-        pass
+    def get_users_results(self, user: User, user_id: int, test_id: int):
+        cursor = self.storage.connection.cursor()
+        query = f"""
+        SELECT title FROM tests;
+        SELECT username FROM users;
+        SELECT score FROM results
+        JOIN results ON user_id = users.id
+        JOIN tests ON test_id = tests.id
+        WHERE users.id = {user_id} AND tests.id = {test_id};
+        """
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        return rows
 
 
