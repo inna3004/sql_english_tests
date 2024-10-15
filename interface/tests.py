@@ -1,6 +1,7 @@
 from service.tests_service import TestsService
 from service.models import Test
-
+from service.repository import TestsRepository, UsersRepository
+from service.result_service import ResultService
 class Tests:
     def __init__(self, service: TestsService):
         self.service = service
@@ -24,6 +25,7 @@ class Tests:
             choise = int(input())
             user_choises[question.id] = question.answers[choise - 1].id
         return user_choises
+
 
 
 

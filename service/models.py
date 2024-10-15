@@ -42,4 +42,14 @@ class User:
     password: str
     is_admin: bool
 
+class Results:
+    id: int | None = None
+    title: str
+    username: str
+    score: int
 
+    def __init__(self,title: str, username: str, score: int, test_id: int = None):
+        self.title = title
+        self.username = username
+        self.score = score
+        self.id = test_id
