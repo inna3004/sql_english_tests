@@ -112,15 +112,18 @@ class UsersRepository(BaseRepository):
 
     def get_users_results(self, user_id: int, test_id: int):
         cursor = self.storage.connection.cursor()
-        query = f""" 
-            SElECT title FROM tests
-            SELECT username FROM users
-            SELECT score FROM results
-            JOIN results ON user_id = users.id
-            JOIN tests ON test_id = tests.id
-            WHERE users.id = {user_id} AND tests.id = {test_id};
-            """
-        cursor.execute(query)
-        raw_data = cursor.fetchall()
-        result = Results(test_id=raw_data[0][0], title=raw_data[0][1], username=raw_data[0][2], score=raw_data[0][3])
-        return result
+        query = """
+            SELECT tests.title, users.username, results.score 
+            FROM results 
+            JOIN users ON results.user_id = users.id 
+            JOIN tests ON results.test_id = tests.id 
+            WHERE users.id = ? AND tests.id = ?;
+        """
+        cursor.execute(query, (user_id, test_id))
+        raw_data = cursor.fetchone()
+
+        if raw_data:
+            result = Results(test_id=test_id, title=raw_data[0], username=raw_data[1], score=raw_data[2])
+            return result
+
+        return None
