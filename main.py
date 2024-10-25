@@ -6,7 +6,6 @@ from service.score_service import ScoreSerive
 from interface.auth import Login
 from interface.tests import Tests
 from service.result_service import ResultService
-from service.result_service import Results
 
 def main():
     storage = SqliteStorage('./storage/data.db')
@@ -20,16 +19,8 @@ def main():
     authInterface = Login(auth)
     testsInterface = Tests(testsService)
 
-    def choose_result():
-        print(f"Вы хотите увидеть историю результатов тестирования ?")
-        choise = input()
-        if choise == "yes":
-            results = Results()
-            get_result = results.get_results_history()
-            print(get_result)
-            return get_result
-        else:
-            exit()
+
+
 
     while True:
         user = authInterface.login_form()
@@ -44,7 +35,18 @@ def main():
         choose_result()
 
 
-
+def choose_result():
+    print(f"Вы хотите увидеть историю результатов тестирования ?")
+    choise = input()
+    if choise == "yes":
+        results = ResultService(UsersRepository)
+        print(f"Введите test_id")
+        test_id = input()
+        get_result = results.get_results_history(test_id)
+        print(get_result)
+        return get_result
+    else:
+        exit()
 
 if __name__ == '__main__':
 

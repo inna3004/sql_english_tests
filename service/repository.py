@@ -110,7 +110,7 @@ class UsersRepository(BaseRepository):
         self.storage.connection.commit()
         self.storage.connection.close()
 
-    def get_users_results(self, user: User, user_id: int, test_id: int):
+    def get_users_results(self, user_id: int, test_id: int):
         cursor = self.storage.connection.cursor()
         query = f"""
             SELECT title FROM tests;
@@ -122,5 +122,5 @@ class UsersRepository(BaseRepository):
             """
         cursor.execute(query)
         raw_data = cursor.fetchall()
-        result = Result(test_id=raw_data[0][0], title=raw_data[0][1], username=raw_data[0][2], score=raw_data[0][3])
+        result = Results(test_id=raw_data[0][0], title=raw_data[0][1], username=raw_data[0][2], score=raw_data[0][3])
         return result
