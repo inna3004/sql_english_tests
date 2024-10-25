@@ -117,28 +117,19 @@ class UsersRepository(BaseRepository):
             FROM results 
             JOIN users ON results.user_id = users.id 
             JOIN tests ON results.test_id = tests.id 
-            WHERE users.id = ? AND tests.id = ?;
+            WHERE users.id = :user_id AND tests.id = :test_id;
         """
 
-        try:
-            print(f"Executing query with user_id={user_id} and test_id={test_id}")
-            cursor.execute(query, (user_id, test_id))
-            raw_data = cursor.fetchone()
+        print("Executing query with user_id=" + str(user_id) + " and test_id=" + str(test_id))
+        cursor.execute(query, {'user_id': user_id, 'test_id': user_id})
+        raw_data = cursor.fetchone()
 
-            if raw_data:
-                if len(raw_data) == 3:
-                    title, username, score = raw_data
-                    result = Results(test_id=test_id, title=title, username=username, score=score)
-                    return result
-                else:
-                    print(f"Unexpected data format: {raw_data}")
-            else:
-                print(f"No results for user_id={user_id} and test_id={test_id}")
+        if raw_data:
+            if len(raw_data) == 3:
+                title, username, score = raw_data
+                result = Results(test_id=test_id, title=title, username=username, score=score)
+                return result
+        else:
+            print("No results for user_id=" + str(user_id) + " and test_id=" + str(test_id))
 
-        except Exception as e:
-            print(f"Error executing query: {e}")
-            return None
-        finally:
-            cursor.close()
-
-        return None
+        cursor.close()
