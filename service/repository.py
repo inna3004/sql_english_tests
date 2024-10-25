@@ -117,11 +117,12 @@ class UsersRepository(BaseRepository):
             FROM results 
             JOIN users ON results.user_id = users.id 
             JOIN tests ON results.test_id = tests.id 
-            WHERE users.id = :user_id AND tests.id = :test_id;
+            WHERE users.id = ?  AND tests.id = ?;
         """
 
         print("Executing query with user_id=" + str(user_id) + " and test_id=" + str(test_id))
-        cursor.execute(query, {'user_id': user_id, 'test_id': user_id})
+        args = user_id, user_id
+        cursor.execute(query, args)
         raw_data = cursor.fetchone()
 
         if raw_data:
