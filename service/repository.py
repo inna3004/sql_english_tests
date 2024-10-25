@@ -119,11 +119,26 @@ class UsersRepository(BaseRepository):
             JOIN tests ON results.test_id = tests.id 
             WHERE users.id = ? AND tests.id = ?;
         """
-        cursor.execute(query, (user_id, test_id))
-        raw_data = cursor.fetchone()
 
-        if raw_data:
-            result = Results(test_id=test_id, title=raw_data[0], username=raw_data[1], score=raw_data[2])
-            return result
+        try:
+            print(f"Executing query with user_id={user_id} and test_id={test_id}")
+            cursor.execute(query, (user_id, test_id))
+            raw_data = cursor.fetchone()
+
+            if raw_data:
+                if len(raw_data) == 3:
+                    title, username, score = raw_data
+                    result = Results(test_id=test_id, title=title, username=username, score=score)
+                    return result
+                else:
+                    print(f"Unexpected data format: {raw_data}")
+            else:
+                print(f"No results for user_id={user_id} and test_id={test_id}")
+
+        except Exception as e:
+            print(f"Error executing query: {e}")
+            return None
+        finally:
+            cursor.close()
 
         return None
