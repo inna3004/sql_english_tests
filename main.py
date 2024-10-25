@@ -39,10 +39,14 @@ def choose_result():
     print(f"Вы хотите увидеть историю результатов тестирования ?")
     choise = input()
     if choise == "yes":
-        results = ResultService(UsersRepository)
+        storage = SqliteStorage('./storage/data.db')
+        userRepository = UsersRepository(storage)
+        results = ResultService(userRepository)
         print(f"Введите test_id")
         test_id = input()
-        get_result = results.get_results_history(test_id)
+        print(f"Введите user_id")
+        user_id = input()
+        get_result = results.get_results_history(user_id,test_id)
         print(get_result)
         return get_result
     else:
