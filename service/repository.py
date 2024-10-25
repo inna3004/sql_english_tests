@@ -112,9 +112,9 @@ class UsersRepository(BaseRepository):
 
     def get_users_results(self, user_id: int, test_id: int):
         cursor = self.storage.connection.cursor()
-        query = f"""
-            SELECT title FROM tests;
-            SELECT username FROM users;
+        query = f""" 
+            SElECT title FROM tests
+            SELECT username FROM users
             SELECT score FROM results
             JOIN results ON user_id = users.id
             JOIN tests ON test_id = tests.id

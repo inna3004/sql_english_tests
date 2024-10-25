@@ -43,10 +43,10 @@ def choose_result():
         userRepository = UsersRepository(storage)
         results = ResultService(userRepository)
         print(f"Введите test_id")
-        test_id = input()
+        test_id = int(input())
         print(f"Введите user_id")
-        user_id = input()
-        get_result = results.get_results_history(user_id,test_id)
+        user_id = int(input())
+        get_result = results.get_results_history(user_id, test_id)
         print(get_result)
         return get_result
     else:
