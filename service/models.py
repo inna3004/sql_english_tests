@@ -42,6 +42,7 @@ class User:
     password: str
     is_admin: bool
 
+
 class Results:
     id: int | None = None
     title: str
@@ -53,3 +54,9 @@ class Results:
         self.username = username
         self.score = score
         self.id = test_id
+
+    def __str__(self):
+        return f"{self.title}: {self.score}"
+
+    def __repr__(self):
+        return f"{self.title}: {self.score}"

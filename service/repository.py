@@ -19,9 +19,6 @@ class TestsRepository(BaseRepository):
             tests.append(test)
         return tests
 
-
-
-
     def find_question(self, question_id):
         cursor = self.storage.connection.cursor()
         query = f"SELECT * FROM questions;"
@@ -30,8 +27,6 @@ class TestsRepository(BaseRepository):
         question = Question(rows[1])
         question.id = rows[0]
         question.question_id = rows[1]
-
-
 
     def find_all_answer(self, data: list|tuple, question_id: int):
         answers = []
@@ -87,7 +82,6 @@ class UsersRepository(BaseRepository):
         rows = cursor.fetchone()
         return rows
 
-
     def get_by_username(self, username: str):
         cursor = self.storage.connection.cursor()
         query = f"SELECT * FROM users WHERE username = '{username}';"
@@ -110,27 +104,27 @@ class UsersRepository(BaseRepository):
         self.storage.connection.commit()
         self.storage.connection.close()
 
-    def get_users_results(self, user_id: int, test_id: int):
+    def get_users_results(self, user_id: int):
         cursor = self.storage.connection.cursor()
         query = """
-            SELECT tests.title, users.username, results.score 
+            SELECT tests.title, users.username, results.score, tests.id as test_id
             FROM results 
             JOIN users ON results.user_id = users.id 
             JOIN tests ON results.test_id = tests.id 
-            WHERE users.id = ?  AND tests.id = ?;
+            WHERE users.id = ?;
         """
 
-        print("Executing query with user_id=" + str(user_id) + " and test_id=" + str(test_id))
-        args = user_id, user_id
+        print("Executing query with user_id=" + str(user_id))
+        args = (user_id,)
         cursor.execute(query, args)
-        raw_data = cursor.fetchone()
-
-        if raw_data:
-            if len(raw_data) == 3:
-                title, username, score = raw_data
-                result = Results(test_id=test_id, title=title, username=username, score=score)
-                return result
-        else:
-            print("No results for user_id=" + str(user_id) + " and test_id=" + str(test_id))
-
+        raw_data = cursor.fetchall()
+        if raw_data is None or len(raw_data) == 0:
+            print("No results found")
+            return []
+        results = []
+        for row in raw_data:
+            if len(row) == 4:
+                title, username, score, test_id = row
+                results.append(Results(test_id=test_id, title=title, username=username, score=score))
         cursor.close()
+        return results

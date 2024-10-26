@@ -19,8 +19,7 @@ def main():
     authInterface = Login(auth)
     testsInterface = Tests(testsService)
 
-
-
+    result_service = ResultService(userRepository)
 
     while True:
         user = authInterface.login_form()
@@ -29,26 +28,20 @@ def main():
         test = testsInterface.choose_test()
         choises = testsInterface.run_test(test)
         sum = score.score(answers=choises, test=test)
-        result_service = ResultService(userRepository)
+
         result = result_service.save_result(user=user, test=test, sum=sum)
         print(f"Вы набрали {sum} баллов")
-        choose_result()
+        choose_result(user, result_service)
 
 
-def choose_result():
+def choose_result(user, results):
     print(f"Вы хотите увидеть историю результатов тестирования ?")
     choise = input()
     if choise == "yes":
-        storage = SqliteStorage('./storage/data.db')
-        userRepository = UsersRepository(storage)
-        results = ResultService(userRepository)
-        print(f"Введите test_id")
-        test_id = int(input())
-        print(f"Введите user_id")
-        user_id = int(input())
-        get_result = results.get_results_history(user_id, test_id)
-        print(get_result)
-        return get_result
+        results = results.get_results_history(user.id)
+        for result in results:
+            print(result)
+        return results
     else:
         exit()
 

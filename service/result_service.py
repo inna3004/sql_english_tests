@@ -12,5 +12,5 @@ class ResultService:
     def save_result(self, user: User, test: Test, sum: int):
         score = self.users_repository.save_result(user, test, sum)
 
-    def get_results_history(self, user_id: int, test_id: int):
-        user = self.users_repository.get_users_results(user_id, test_id)
+    def get_results_history(self, user_id: int):
+        return self.users_repository.get_users_results(user_id)
